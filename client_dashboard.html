@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Pwen mwen — Kat Fidelite{% endblock %}
+{% block content %}
+<div class="loyalty-card">
+  <p class="eyebrow">Bonjou {{ current_user.full_name.split(' ')[0] }}</p>
+  <div class="loyalty-points">
+    <span class="points-number-lg">{{ current_user.points }}</span>
+    <span class="points-label">pwen fidelite</span>
+  </div>
+  <p class="hint">1 pwen pou chak {{ gourdes_pa_pwen }} goud ou depanse.</p>
+</div>
+
+<div class="card">
+  <h2 class="card-title">Istwa acha ou</h2>
+  {% if purchases %}
+  <table class="table table-compact">
+    <thead>
+      <tr>
+        <th>Dat</th>
+        <th class="num">Montan</th>
+        <th class="num">Pwen genyen</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in purchases %}
+      <tr>
+        <td class="muted">{{ p.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td class="num">{{ "%.2f"|format(p.amount_gourdes) }} G</td>
+        <td class="num">+{{ p.points_earned }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="hint">Ou poko gen okenn acha anrejistre.</p>
+  {% endif %}
+</div>
+{% endblock %}

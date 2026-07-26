@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Konekte — Kat Fidelite{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="stamp-row" aria-hidden="true">
+      <span class="stamp filled"></span>
+      <span class="stamp filled"></span>
+      <span class="stamp filled"></span>
+      <span class="stamp"></span>
+      <span class="stamp"></span>
+    </div>
+    <h1>Konekte</h1>
+    <p class="subtitle">Antre nan kont ou pou wè pwen fidelite ou.</p>
+
+    <form method="post" class="form">
+      <label for="username">Non itilizatè</label>
+      <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+
+      <label for="password">Modpas</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+      <button type="submit" class="btn btn-primary">Konekte</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

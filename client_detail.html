@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ client.full_name }} — Kat Fidelite{% endblock %}
+{% block content %}
+<p class="eyebrow"><a href="{{ url_for('admin_dashboard') }}" class="link-quiet">← Tout kliyan</a></p>
+
+<div class="page-head">
+  <div>
+    <h1>{{ client.full_name }}</h1>
+    <p class="subtitle">{{ client.username }}</p>
+  </div>
+  <div class="points-badge">
+    <span class="points-number">{{ client.points }}</span>
+    <span class="points-label">pwen</span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h2 class="card-title">Anrejistre yon acha</h2>
+    <p class="hint">1 pwen pou chak {{ gourdes_pa_pwen }} goud.</p>
+    <form method="post" action="{{ url_for('add_purchase', client_id=client.id) }}" class="form">
+      <label for="amount">Montan acha a (goud)</label>
+      <input type="number" step="0.01" min="0.01" id="amount" name="amount" required autofocus>
+      <button type="submit" class="btn btn-primary">Ajoute acha</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Istwa acha</h2>
+    {% if purchases %}
+    <table class="table table-compact">
+      <thead>
+        <tr>
+          <th>Dat</th>
+          <th class="num">Montan</th>
+          <th class="num">Pwen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in purchases %}
+        <tr>
+          <td class="muted">{{ p.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+          <td class="num">{{ "%.2f"|format(p.amount_gourdes) }} G</td>
+          <td class="num">+{{ p.points_earned }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="hint">Pa gen okenn acha anrejistre pou kounye a.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

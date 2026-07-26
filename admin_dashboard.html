@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Admin — Kat Fidelite{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Espas Admin</p>
+    <h1>Kliyan yo</h1>
+  </div>
+  <a href="{{ url_for('new_client') }}" class="btn btn-primary">+ Nouvo kliyan</a>
+</div>
+
+{% if clients %}
+<div class="table-card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Non</th>
+        <th>Non itilizatè</th>
+        <th class="num">Pwen</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in clients %}
+      <tr>
+        <td>{{ c.full_name }}</td>
+        <td class="muted">{{ c.username }}</td>
+        <td class="num"><span class="pill">{{ c.points }}</span></td>
+        <td class="align-right">
+          <a href="{{ url_for('client_detail', client_id=c.id) }}" class="link">Wè detay →</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <p>Pa gen kliyan ankò.</p>
+  <a href="{{ url_for('new_client') }}" class="btn btn-primary">Kreye premye kliyan an</a>
+</div>
+{% endif %}
+{% endblock %}

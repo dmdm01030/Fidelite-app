@@ -1,0 +1,305 @@
+:root {
+  --ink: #0F2E2A;
+  --ink-soft: #3D5B56;
+  --paper: #F6F7F5;
+  --card: #FFFFFF;
+  --gold: #B8862E;
+  --gold-soft: #E8D8B4;
+  --line: #E1E4E1;
+  --success: #2F7D5A;
+  --error: #B23A3A;
+  --radius: 10px;
+  --font-display: "Fraunces", serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+a { color: inherit; }
+
+/* Topbar ------------------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.75rem;
+  background: var(--ink);
+  color: #fff;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.brand-mark { color: var(--gold); }
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.whoami { color: var(--gold-soft); }
+
+.link-quiet {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+}
+.link-quiet:hover { color: #fff; }
+
+/* Page ----------------------------------------------------------------- */
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2.5rem 1.75rem 4rem;
+}
+
+.narrow { max-width: 440px; margin: 0 auto; }
+
+.eyebrow {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-soft);
+  margin: 0 0 0.4rem;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.subtitle { color: var(--ink-soft); margin: 0 0 1.5rem; }
+
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Flash messages --------------------------------------------------------- */
+.flash-stack { margin-bottom: 1.5rem; display: grid; gap: 0.5rem; }
+
+.flash {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+}
+.flash-error { background: #FBEAEA; color: var(--error); border-color: #F1CDCD; }
+.flash-success { background: #E9F4EE; color: var(--success); border-color: #CBE7D6; }
+
+/* Auth card ---------------------------------------------------------- */
+.auth-wrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2.25rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 1px 2px rgba(15,46,42,0.04);
+}
+
+.stamp-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+.stamp {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-soft);
+}
+.stamp.filled { background: var(--gold); border-color: var(--gold); }
+
+/* Forms ---------------------------------------------------------------- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.form label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-top: 0.75rem;
+}
+
+.form input {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  background: #fff;
+}
+
+.form input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+  border-color: var(--gold);
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+  margin-top: 1.25rem;
+}
+.btn-primary:hover { background: #163f39; }
+
+/* Cards / tables --------------------------------------------------------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.card-form { margin-top: 0.25rem; }
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 0 0 0.25rem;
+}
+
+.hint { color: var(--ink-soft); font-size: 0.88rem; margin: 0 0 1rem; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+.table-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.table { width: 100%; border-collapse: collapse; }
+
+.table th, .table td {
+  padding: 0.85rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.table th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table .num { text-align: right; }
+.table.table-compact th, .table.table-compact td { padding: 0.6rem 0; }
+
+.muted { color: var(--ink-soft); }
+.align-right { text-align: right; }
+
+.link { color: var(--ink); font-weight: 600; text-decoration: none; font-size: 0.9rem; }
+.link:hover { color: var(--gold); }
+
+.pill {
+  display: inline-block;
+  background: var(--gold-soft);
+  color: #6b4d16;
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+}
+.empty-state .btn { margin-top: 1rem; }
+
+/* Points badge (admin client detail) --------------------------------- */
+.points-badge {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.9rem 1.4rem;
+  text-align: center;
+  min-width: 100px;
+}
+.points-number { display: block; font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--gold-soft); }
+.points-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Client loyalty card hero -------------------------------------------- */
+.loyalty-card {
+  background: linear-gradient(135deg, var(--ink) 0%, #163f39 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+  margin-bottom: 1.75rem;
+}
+.loyalty-card .eyebrow { color: rgba(255,255,255,0.6); }
+.loyalty-card .hint { color: rgba(255,255,255,0.65); margin-bottom: 0; }
+
+.loyalty-points {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0.6rem;
+}
+.points-number-lg {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--gold-soft);
+  line-height: 1;
+}

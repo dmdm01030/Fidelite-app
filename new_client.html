@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Nouvo kliyan — Kat Fidelite{% endblock %}
+{% block content %}
+<div class="narrow">
+  <p class="eyebrow"><a href="{{ url_for('admin_dashboard') }}" class="link-quiet">← Retounen</a></p>
+  <h1>Kreye yon kont kliyan</h1>
+
+  <form method="post" class="form card-form">
+    <label for="full_name">Non konplè</label>
+    <input type="text" id="full_name" name="full_name" required autofocus>
+
+    <label for="username">Non itilizatè</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Modpas</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit" class="btn btn-primary">Kreye kont</button>
+  </form>
+</div>
+{% endblock %}
