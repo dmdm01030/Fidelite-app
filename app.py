@@ -238,6 +238,8 @@ def init_db():
             print("!! Chanje modpas sa a imedyatman apre premye koneksyon !!")
 
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 3000))
+    app.run(host="0.0.0.0", port=port)
