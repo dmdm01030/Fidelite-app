@@ -1,3 +1,4 @@
+
 import os
 from datetime import datetime
 
@@ -218,6 +219,29 @@ def client_dashboard():
     )
 
 
+@app.route("/chanje-modpas", methods=["GET", "POST"])
+@login_required
+def change_password():
+    if request.method == "POST":
+        current_password = request.form.get("current_password", "")
+        new_password = request.form.get("new_password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not current_user.check_password(current_password):
+            flash("Modpas aktyèl la pa kòrèk.", "error")
+        elif len(new_password) < 6:
+            flash("Nouvo modpas la dwe gen omwen 6 karaktè.", "error")
+        elif new_password != confirm_password:
+            flash("Nouvo modpas yo pa menm.", "error")
+        else:
+            current_user.set_password(new_password)
+            db.session.commit()
+            flash("Modpas ou chanje ak siksè.", "success")
+            return redirect(url_for("index"))
+
+    return render_template("change_password.html")
+
+
 # ---------------------------------------------------------------------------
 # Inisyalizasyon baz done + premye kont admin
 # ---------------------------------------------------------------------------
@@ -238,6 +262,8 @@ def init_db():
             print("!! Chanje modpas sa a imedyatman apre premye koneksyon !!")
 
 
+# Inisyalize baz done a nenpòt jan aplikasyon an lanse (Flask dev server
+# oswa gunicorn sou Render).
 init_db()
 
 if __name__ == "__main__":
