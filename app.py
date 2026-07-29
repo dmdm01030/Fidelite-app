@@ -183,6 +183,50 @@ def edit_client(client_id):
     return render_template("edit_client.html", client=client)
 
 
+@app.route("/admin/kliyan/<int:client_id>/efase", methods=["POST"])
+@login_required
+def delete_client(client_id):
+    if current_user.role != "admin":
+        return redirect(url_for("client_dashboard"))
+
+    client = User.query.get_or_404(client_id)
+    Purchase.query.filter_by(client_id=client.id).delete()
+    db.session.delete(client)
+    db.session.commit()
+    flash(f"Kont {client.full_name} efase.", "success")
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/admin/kliyan/<int:client_id>/fusion", methods=["GET", "POST"])
+@login_required
+def merge_client(client_id):
+    if current_user.role != "admin":
+        return redirect(url_for("client_dashboard"))
+
+    client = User.query.get_or_404(client_id)
+    other_clients = (
+        User.query.filter(User.role == "client", User.id != client.id)
+        .order_by(User.full_name)
+        .all()
+    )
+
+    if request.method == "POST":
+        target_id = request.form.get("target_id")
+        target = User.query.get_or_404(int(target_id)) if target_id else None
+
+        if not target or target.id == client.id:
+            flash("Tanpri chwazi yon lòt kliyan valab.", "error")
+        else:
+            Purchase.query.filter_by(client_id=client.id).update({"client_id": target.id})
+            target.points += client.points
+            db.session.delete(client)
+            db.session.commit()
+            flash(f"{client.full_name} fizyone ak {target.full_name}.", "success")
+            return redirect(url_for("client_detail", client_id=target.id))
+
+    return render_template("merge_client.html", client=client, other_clients=other_clients)
+
+
 @app.route("/admin/kliyan/<int:client_id>")
 @login_required
 def client_detail(client_id):
