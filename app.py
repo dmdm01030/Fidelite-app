@@ -16,7 +16,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "chanje-sa-a-nan-pwodiksyon")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "fidelite.db")
+# Kote baz done a rete: si Railway gen yon Volume monte sou /data, itilize l
+# (done yo ap rete la atravè chak deplwaman). Sinon, itilize dosye pwojè a
+# (itil pou tès lokal, men done yo ap efase chak redeploy sou Railway).
+DATA_DIR = "/data" if os.path.isdir("/data") else basedir
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(DATA_DIR, "fidelite.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Konbyen goud pou 1 pwen
