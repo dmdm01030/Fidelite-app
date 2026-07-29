@@ -1,5 +1,4 @@
 import os
-
 from datetime import datetime
 
 from flask import Flask, render_template, redirect, url_for, request, flash
@@ -43,6 +42,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     full_name = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(30), unique=True, nullable=True)
     role = db.Column(db.String(20), nullable=False, default="client")  # 'admin' oswa 'client'
     points = db.Column(db.Integer, nullable=False, default=0)
 
@@ -130,17 +130,21 @@ def new_client():
         full_name = request.form.get("full_name", "").strip()
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
+        phone = request.form.get("phone", "").strip() or None
 
         if not full_name or not username or not password:
             flash("Tanpri ranpli tout chan yo.", "error")
         elif User.query.filter_by(username=username).first():
             flash("Non itilizatè sa a deja pran.", "error")
+        elif phone and User.query.filter_by(phone=phone).first():
+            flash("Nimewo telefòn sa a deja itilize pou yon lòt kliyan.", "error")
         else:
             client = User(
                 full_name=full_name,
                 username=username,
                 role="client",
                 points=0,
+                phone=phone,
             )
             client.set_password(password)
             db.session.add(client)
@@ -149,6 +153,34 @@ def new_client():
             return redirect(url_for("admin_dashboard"))
 
     return render_template("new_client.html")
+
+
+@app.route("/admin/kliyan/<int:client_id>/modifye", methods=["GET", "POST"])
+@login_required
+def edit_client(client_id):
+    if current_user.role != "admin":
+        return redirect(url_for("client_dashboard"))
+
+    client = User.query.get_or_404(client_id)
+
+    if request.method == "POST":
+        full_name = request.form.get("full_name", "").strip()
+        phone = request.form.get("phone", "").strip() or None
+
+        existing = User.query.filter_by(phone=phone).first() if phone else None
+
+        if not full_name:
+            flash("Non konplè a obligatwa.", "error")
+        elif existing and existing.id != client.id:
+            flash("Nimewo telefòn sa a deja itilize pou yon lòt kliyan.", "error")
+        else:
+            client.full_name = full_name
+            client.phone = phone
+            db.session.commit()
+            flash("Enfòmasyon kliyan an mete ajou.", "success")
+            return redirect(url_for("client_detail", client_id=client.id))
+
+    return render_template("edit_client.html", client=client)
 
 
 @app.route("/admin/kliyan/<int:client_id>")
@@ -246,12 +278,35 @@ def change_password():
     return render_template("change_password.html")
 
 
+@app.route("/verifye-pwen", methods=["GET", "POST"])
+def verify_points():
+    result = None
+    searched = False
+
+    if request.method == "POST":
+        searched = True
+        phone = request.form.get("phone", "").strip()
+        if phone:
+            result = User.query.filter_by(role="client", phone=phone).first()
+
+    return render_template("verify_points.html", result=result, searched=searched)
+
+
 # ---------------------------------------------------------------------------
 # Inisyalizasyon baz done + premye kont admin
 # ---------------------------------------------------------------------------
 def init_db():
     with app.app_context():
         db.create_all()
+
+        # Ti migrasyon: ajoute kolòn 'phone' si baz done a te kreye anvan
+        # fonksyonalite sa a (san efase done ki deja la yo).
+        with db.engine.connect() as conn:
+            columns = [row[1] for row in conn.exec_driver_sql("PRAGMA table_info(user)")]
+            if "phone" not in columns:
+                conn.exec_driver_sql("ALTER TABLE user ADD COLUMN phone VARCHAR(30)")
+                conn.commit()
+
         if not User.query.filter_by(role="admin").first():
             admin = User(
                 full_name="Admin",
