@@ -6,7 +6,8 @@
 <div class="page-head">
   <div>
     <h1>{{ client.full_name }}</h1>
-    <p class="subtitle">{{ client.username }}</p>
+    <p class="subtitle">{{ client.username }}{% if client.phone %} · {{ client.phone }}{% endif %}</p>
+    <a href="{{ url_for('edit_client', client_id=client.id) }}" class="link">Modifye kliyan</a>
   </div>
   <div class="points-badge">
     <span class="points-number">{{ client.points }}</span>
