@@ -35,4 +35,30 @@
   <p class="hint">Ou poko gen okenn acha anrejistre.</p>
   {% endif %}
 </div>
+
+<div class="card" style="margin-top: 1.25rem;">
+  <h2 class="card-title">Istwa retrè ou</h2>
+  {% if redemptions %}
+  <table class="table table-compact">
+    <thead>
+      <tr>
+        <th>Dat</th>
+        <th class="num">Pwen</th>
+        <th class="num">Valè</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in redemptions %}
+      <tr>
+        <td class="muted">{{ r.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+        <td class="num">−{{ r.points_used }}</td>
+        <td class="num">{{ "%.2f"|format(r.value_gourdes) }} G</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="hint">Ou poko gen okenn retrè anrejistre.</p>
+  {% endif %}
+</div>
 {% endblock %}
