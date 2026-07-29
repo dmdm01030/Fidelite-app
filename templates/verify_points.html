@@ -1,1 +1,52 @@
 
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verifye pwen — Kat Fidelite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a href="{{ url_for('verify_points') }}" class="brand">
+      <span class="brand-mark">●</span> Kat Fidelite
+    </a>
+    <nav class="topnav">
+      <a href="{{ url_for('login') }}" class="link-quiet">Konekte</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="narrow">
+      <p class="eyebrow">Verifikasyon pwen</p>
+      <h1>Konbyen pwen mwen genyen?</h1>
+      <p class="subtitle">Antre nimewo telefòn ou te bay boutik la.</p>
+
+      <form method="post" class="form card-form">
+        <label for="phone">Nimewo telefòn</label>
+        <input type="tel" id="phone" name="phone" required autofocus placeholder="Egzanp: 37123456">
+        <button type="submit" class="btn btn-primary">Verifye pwen</button>
+      </form>
+
+      {% if searched %}
+        {% if result %}
+        <div class="loyalty-card" style="margin-top: 1.5rem;">
+          <p class="eyebrow">{{ result.full_name }}</p>
+          <div class="loyalty-points">
+            <span class="points-number-lg">{{ result.points }}</span>
+            <span class="points-label">pwen fidelite</span>
+          </div>
+        </div>
+        {% else %}
+        <div class="flash flash-error" style="margin-top: 1.5rem;">
+          Nou pa jwenn okenn kont ak nimewo sa a. Verifye nimewo a, oswa mande boutik la enskri ou.
+        </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>
