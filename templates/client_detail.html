@@ -33,6 +33,18 @@
   </div>
 
   <div class="card">
+    <h2 class="card-title">Fè yon retrè</h2>
+    <p class="hint">100 pwen = {{ (100 * goud_pa_pwen_retre) | round(2) }} goud. {{ client.full_name }} gen {{ client.points }} pwen.</p>
+    <form method="post" action="{{ url_for('add_redemption', client_id=client.id) }}" class="form">
+      <label for="points_used">Kantite pwen pou retire</label>
+      <input type="number" step="1" min="1" max="{{ client.points }}" id="points_used" name="points_used" required>
+      <button type="submit" class="btn btn-primary">Fè retrè</button>
+    </form>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top: 1.25rem;">
+  <div class="card">
     <h2 class="card-title">Istwa acha</h2>
     {% if purchases %}
     <table class="table table-compact">
@@ -55,6 +67,32 @@
     </table>
     {% else %}
     <p class="hint">Pa gen okenn acha anrejistre pou kounye a.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Istwa retrè</h2>
+    {% if redemptions %}
+    <table class="table table-compact">
+      <thead>
+        <tr>
+          <th>Dat</th>
+          <th class="num">Pwen</th>
+          <th class="num">Valè</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in redemptions %}
+        <tr>
+          <td class="muted">{{ r.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+          <td class="num">−{{ r.points_used }}</td>
+          <td class="num">{{ "%.2f"|format(r.value_gourdes) }} G</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="hint">Pa gen okenn retrè anrejistre pou kounye a.</p>
     {% endif %}
   </div>
 </div>
