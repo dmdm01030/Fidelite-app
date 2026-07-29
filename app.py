@@ -23,8 +23,11 @@ DATA_DIR = "/data" if os.path.isdir("/data") else basedir
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(DATA_DIR, "fidelite.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Konbyen goud pou 1 pwen
+# Konbyen goud pou 1 pwen lè yon kliyan ACHTE (100 goud = 1 pwen)
 GOURDES_PA_PWEN = 100
+
+# Valè lajan pou chak pwen lè yon kliyan fè yon RETRÈ (100 pwen = 5 goud)
+GOUD_PA_PWEN_RETRE = 0.05
 
 db = SQLAlchemy(app)
 
@@ -63,6 +66,14 @@ class Purchase(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     amount_gourdes = db.Column(db.Float, nullable=False)
     points_earned = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class Redemption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    points_used = db.Column(db.Integer, nullable=False)
+    value_gourdes = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -183,6 +194,38 @@ def edit_client(client_id):
     return render_template("edit_client.html", client=client)
 
 
+@app.route("/admin/kliyan/<int:client_id>/retre", methods=["POST"])
+@login_required
+def add_redemption(client_id):
+    if current_user.role != "admin":
+        return redirect(url_for("client_dashboard"))
+
+    client = User.query.get_or_404(client_id)
+
+    try:
+        points_used = int(request.form.get("points_used", 0))
+    except ValueError:
+        points_used = 0
+
+    if points_used <= 0:
+        flash("Antre yon kantite pwen valab.", "error")
+    elif points_used > client.points:
+        flash(f"{client.full_name} gen sèlman {client.points} pwen.", "error")
+    else:
+        value = round(points_used * GOUD_PA_PWEN_RETRE, 2)
+        redemption = Redemption(
+            client_id=client.id,
+            points_used=points_used,
+            value_gourdes=value,
+        )
+        client.points -= points_used
+        db.session.add(redemption)
+        db.session.commit()
+        flash(f"Retrè anrejistre : {points_used} pwen ({value} goud) retire pou {client.full_name}.", "success")
+
+    return redirect(url_for("client_detail", client_id=client.id))
+
+
 @app.route("/admin/kliyan/<int:client_id>/efase", methods=["POST"])
 @login_required
 def delete_client(client_id):
@@ -239,11 +282,18 @@ def client_detail(client_id):
         .order_by(Purchase.created_at.desc())
         .all()
     )
+    redemptions = (
+        Redemption.query.filter_by(client_id=client.id)
+        .order_by(Redemption.created_at.desc())
+        .all()
+    )
     return render_template(
         "client_detail.html",
         client=client,
         purchases=purchases,
+        redemptions=redemptions,
         gourdes_pa_pwen=GOURDES_PA_PWEN,
+        goud_pa_pwen_retre=GOUD_PA_PWEN_RETRE,
     )
 
 
@@ -292,9 +342,15 @@ def client_dashboard():
         .order_by(Purchase.created_at.desc())
         .all()
     )
+    redemptions = (
+        Redemption.query.filter_by(client_id=current_user.id)
+        .order_by(Redemption.created_at.desc())
+        .all()
+    )
     return render_template(
         "client_dashboard.html",
         purchases=purchases,
+        redemptions=redemptions,
         gourdes_pa_pwen=GOURDES_PA_PWEN,
     )
 
@@ -341,7 +397,7 @@ def verify_points():
 # ---------------------------------------------------------------------------
 def init_db():
     with app.app_context():
-        db.create_all()
+        db.create_all()  # kreye tab Redemption si li pa la deja
 
         # Ti migrasyon: ajoute kolòn 'phone' si baz done a te kreye anvan
         # fonksyonalite sa a (san efase done ki deja la yo).
