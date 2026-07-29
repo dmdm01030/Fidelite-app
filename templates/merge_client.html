@@ -1,1 +1,28 @@
 
+{% extends "base.html" %}
+{% block title %}Fizyone {{ client.full_name }} — Kat Fidelite{% endblock %}
+{% block content %}
+<div class="narrow">
+  <p class="eyebrow"><a href="{{ url_for('client_detail', client_id=client.id) }}" class="link-quiet">← Retounen</a></p>
+  <h1>Fizyone kont doubl</h1>
+  <p class="subtitle">
+    Sa ap deplase tout istwa acha ak {{ client.points }} pwen {{ client.full_name }} genyen yo
+    sou yon lòt kont, epi efase kont {{ client.full_name }} a. Aksyon sa a pa ka anile.
+  </p>
+
+  {% if other_clients %}
+  <form method="post" class="form card-form">
+    <label for="target_id">Fizyone ak kliyan sa a</label>
+    <select id="target_id" name="target_id" required style="padding: 0.65rem 0.8rem; border: 1px solid #E1E4E1; border-radius: 8px; font-family: inherit; font-size: 0.98rem;">
+      <option value="">— Chwazi yon kliyan —</option>
+      {% for c in other_clients %}
+      <option value="{{ c.id }}">{{ c.full_name }} ({{ c.points }} pwen)</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Fizyone kont yo</button>
+  </form>
+  {% else %}
+  <p class="hint">Pa gen okenn lòt kliyan pou fizyone avè l.</p>
+  {% endif %}
+</div>
+{% endblock %}
