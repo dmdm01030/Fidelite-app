@@ -37,7 +37,9 @@
     <p class="hint">100 pwen = {{ (100 * goud_pa_pwen_retre) | round(2) }} goud. {{ client.full_name }} gen {{ client.points }} pwen.</p>
     <form method="post" action="{{ url_for('add_redemption', client_id=client.id) }}" class="form">
       <label for="points_used">Kantite pwen pou retire</label>
-      <input type="number" step="1" min="1" max="{{ client.points }}" id="points_used" name="points_used" required>
+      <input type="number" step="1" min="1" max="{{ client.points }}" id="points_used" name="points_used" required
+             oninput="document.getElementById('retrait-valè').textContent = ((this.value || 0) * {{ goud_pa_pwen_retre }}).toFixed(2);">
+      <p class="hint" style="margin: 0.4rem 0 0;">Valè: <strong id="retrait-valè">0.00</strong> goud</p>
       <button type="submit" class="btn btn-primary">Fè retrè</button>
     </form>
   </div>
